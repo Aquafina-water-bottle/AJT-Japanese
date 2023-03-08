@@ -42,7 +42,7 @@ def do_not_modify_destination_if_have_nothing_to_add(fn: Callable[['DoTask', str
 @enum.unique
 class DoTasksType(enum.Enum):
     on_focus_lost = enum.auto()
-    toolbar = enum.auto()
+    regenerate_all_button = enum.auto()
     on_note_add = enum.auto()
     update_notes_op = enum.auto()
 

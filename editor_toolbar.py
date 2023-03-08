@@ -46,7 +46,7 @@ def query_buttons() -> Iterable[ToolbarButton]:
     return (
         ToolbarButton(
             id='regenerate_all_button',
-            on_press=modify_note(lambda note: DoTasks(note, DoTasksType.toolbar, overwrite=True).run()),
+            on_press=modify_note(lambda note: DoTasks(note, DoTasksType.regenerate_all_button, overwrite=True).run()),
             tip='Regenerate all fields',
             conf=cfg.toolbar.regenerate_all_button
         ),
