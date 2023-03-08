@@ -21,6 +21,7 @@ class Profile:
     destination: str
     mode: str
     split_morphemes: bool
+    run_on_note_add: bool
 
     _subclasses_map = {}  # "furigana" (str) -> ProfileFurigana
 
@@ -45,6 +46,7 @@ class Profile:
             name="New profile",
             note_type="Japanese",
             split_morphemes=True,
+            run_on_note_add=True,
             **kwargs,
         )
 

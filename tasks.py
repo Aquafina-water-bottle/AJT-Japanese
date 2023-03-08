@@ -1,6 +1,7 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org> and contributors
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
+import enum
 import functools
 from typing import Optional, Callable
 
@@ -35,6 +36,15 @@ def do_not_modify_destination_if_have_nothing_to_add(fn: Callable[['DoTask', str
         )
 
     return wrapper
+
+
+# noinspection PyArgumentList
+@enum.unique
+class DoTasksType(enum.Enum):
+    on_focus_lost = enum.auto()
+    toolbar = enum.auto()
+    on_note_add = enum.auto()
+    update_notes_op = enum.auto()
 
 
 class DoTask:
@@ -75,8 +85,9 @@ class AddPitch(DoTask, task_type=ProfilePitch):
 
 
 class DoTasks:
-    def __init__(self, note: Note, src_field: Optional[str] = None, overwrite: bool = False):
+    def __init__(self, note: Note, do_tasks_type: DoTasksType, src_field: Optional[str] = None, overwrite: bool = False):
         self._note = note
+        self._do_tasks_type = do_tasks_type
         self._tasks = iter_tasks(note, src_field)
         self._overwrite = overwrite
 
@@ -93,6 +104,10 @@ class DoTasks:
         return changed
 
     def can_fill_destination(self, task: Profile) -> bool:
+        # Task is marked as "cannot run on note add" while the task is a fresh note
+        if self._do_tasks_type == DoTasksType.on_note_add and not task.run_on_note_add:
+            return False
+
         # Field names are empty or None
         if not task.source or not task.destination:
             return False
@@ -115,6 +130,7 @@ class DoTasks:
 def on_focus_lost(changed: bool, note: Note, field_idx: int) -> bool:
     return DoTasks(
         note=note,
+        do_tasks_type=DoTasksType.on_focus_lost,
         src_field=note.keys()[field_idx],
     ).run(changed=changed)
 
@@ -130,7 +146,7 @@ def should_generate(note: Note) -> bool:
 
 def on_add_note(note: Note) -> None:
     if should_generate(note):
-        DoTasks(note=note).run()
+        DoTasks(note=note, do_tasks_type=DoTasksType.on_note_add).run()
 
 
 # Entry point

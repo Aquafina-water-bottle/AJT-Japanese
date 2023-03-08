@@ -17,7 +17,8 @@
       "destination": "VocabPitchPattern",
       "mode": "pitch",
       "output_format": "html",
-      "split_morphemes": false
+      "split_morphemes": false,
+      "run_on_note_add": true
     },
     {
       "name": "Add pitch accent number",
@@ -26,7 +27,8 @@
       "destination": "VocabPitchNum",
       "mode": "pitch",
       "output_format": "number",
-      "split_morphemes": false
+      "split_morphemes": false,
+      "run_on_note_add": true
     },
     {
       "name": "Add furigana for sentence",
@@ -34,7 +36,8 @@
       "source": "SentKanji",
       "destination": "SentFurigana",
       "mode": "furigana",
-      "split_morphemes": true
+      "split_morphemes": true,
+      "run_on_note_add": true
     },
     {
       "name": "Add furigana for word",
@@ -42,7 +45,8 @@
       "source": "VocabKanji",
       "destination": "VocabFurigana",
       "mode": "furigana",
-      "split_morphemes": false
+      "split_morphemes": false,
+      "run_on_note_add": true
     }
   ],
   "pitch_accent": {
