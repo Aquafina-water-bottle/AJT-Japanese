@@ -3,7 +3,7 @@
 
 import os.path
 import re
-from typing import Collection, Iterable, List, NewType, NamedTuple
+from typing import Collection, Iterable, NewType, NamedTuple
 
 from aqt.qt import *
 from aqt.utils import showInfo
@@ -43,13 +43,15 @@ class ExpandingTableWidget(QTableWidget):
 
     def addDeleteSelectedRowsContextAction(self):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        action = self.addAction('Delete selected rows')
+        action = QAction("Delete selected rows", self)
         qconnect(action.triggered, self.deleteSelectedRows)
+        self.addAction(action)
 
     def addPasteContextAction(self):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        action = self.addAction('Paste (Ctrl+V)')
+        action = QAction("Paste (Ctrl+V)", self)
         qconnect(action.triggered, self.fillCurrentRow)
+        self.addAction(action)
 
     def deleteSelectedRows(self):
         for index in self.selectedIndexes():
@@ -79,7 +81,7 @@ class ExpandingTableWidget(QTableWidget):
             self.setItem(row, column_num, QTableWidgetItem(cell_content))
 
     def addEmptyLastRow(self):
-        return self.addRow(cells=(str() for _column in self._columns), last=True)
+        return self.addRow(cells=('' for _column in self._columns), last=True)
 
     def getRowCells(self, row_number: int) -> TableRow:
         return tuple(self.item(row_number, column_number) for column_number in range(self.columnCount()))
@@ -166,7 +168,7 @@ class PitchOverrideTable(ExpandingTableWidget):
                 self.addRow(row_cells)
         return self
 
-    def as_tsv(self) -> List[str]:
+    def as_tsv(self) -> list[str]:
         return [
             self._column_sep.join(row_cells)
             for row_cells in self.iterateRowTexts()
